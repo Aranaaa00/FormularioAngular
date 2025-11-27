@@ -1,0 +1,80 @@
+<h2>Gestor de Productos</h2>
+<form [formGroup]="productosForm" (ngSubmit)="onSubmit()" class="productos-form">
+  <label>
+    Nombre del Producto:
+    <input formControlName="nombre" />
+  </label>
+  <div *ngIf="productosForm.get('nombre')?.touched && productosForm.get('nombre')?.invalid">
+    <span *ngIf="productosForm.get('nombre')?.errors?.['required']">Requerido</span>
+    <span *ngIf="productosForm.get('nombre')?.errors?.['minlength']">Mínimo 3 caracteres</span>
+  </div>
+
+  <label>
+    Descripción:
+    <input formControlName="descripcion" />
+  </label>
+  <div *ngIf="productosForm.get('descripcion')?.touched && productosForm.get('descripcion')?.invalid">
+    <span *ngIf="productosForm.get('descripcion')?.errors?.['required']">Requerido</span>
+    <span *ngIf="productosForm.get('descripcion')?.errors?.['maxLength']">Máximo 200 caracteres</span>
+  </div>
+
+  <label>
+    Precio (€):
+    <input formControlName="precio" type="number" step="0.01" />
+  </label>
+  <div *ngIf="productosForm.get('precio')?.touched && productosForm.get('precio')?.invalid">
+    <span *ngIf="productosForm.get('precio')?.errors?.['required']">Requerido</span>
+    <span *ngIf="productosForm.get('precio')?.errors?.['min']">Debe ser mayor a 0</span>
+  </div>
+
+  <label>
+    Cantidad:
+    <input formControlName="cantidad" type="number" />
+  </label>
+  <div *ngIf="productosForm.get('cantidad')?.touched && productosForm.get('cantidad')?.invalid">
+    <span *ngIf="productosForm.get('cantidad')?.errors?.['required']">Requerido</span>
+    <span *ngIf="productosForm.get('cantidad')?.errors?.['min']">Mínimo 1</span>
+    <span *ngIf="productosForm.get('cantidad')?.errors?.['max']">Máximo 1000</span>
+  </div>
+
+  <label>
+    Categoría:
+    <input formControlName="categoria" />
+  </label>
+  <div *ngIf="productosForm.get('categoria')?.touched && productosForm.get('categoria')?.invalid">
+    <span *ngIf="productosForm.get('categoria')?.errors?.['required']">Requerido</span>
+  </div>
+
+  <button type="submit">Agregar Producto</button>
+</form>
+
+<h3 class="productos-titulo">Productos Ingresados</h3>
+<table class="productos-tabla" *ngIf="productos.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio (€)</th>
+      <th>Cantidad</th>
+      <th>Categoría</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of productos">
+      <td>{{ p.id }}</td>
+      <td>{{ p.nombre }}</td>
+      <td>{{ p.descripcion }}</td>
+      <td>{{ p.precio | number:'1.2-2' }}</td>
+      <td>{{ p.cantidad }}</td>
+      <td>{{ p.categoria }}</td>
+      <td>
+        <button type="button" (click)="eliminarProducto(p.id)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="productos-total" *ngIf="productos.length > 0">
+  Total del Inventario: {{ calcularTotal() | currency:'EUR':'symbol':'1.2-2' }}
+</div>
